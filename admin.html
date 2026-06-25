@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>反馈管理 - 通用AI动手课</title>
+    <title>反馈管理</title>
     <style>
         * {
             margin: 0;
@@ -12,266 +12,137 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 40px 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1200px;
             margin: 0 auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 24px;
         }
 
         .header {
             text-align: center;
-            color: #fff;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #eee;
         }
 
         .header h1 {
-            font-size: 32px;
-            margin-bottom: 10px;
-        }
-
-        .header p {
-            opacity: 0.9;
-            font-size: 16px;
-        }
-
-        .panel {
-            background: #fff;
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-        }
-
-        .panel-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #1a2332;
-            margin-bottom: 20px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid #e2e8f0;
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 500;
-            color: #334155;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 12px 16px;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            font-size: 14px;
-            font-family: inherit;
-            transition: all 0.2s ease;
-            box-sizing: border-box;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            font-size: 24px;
+            color: #333;
         }
 
         .btn {
-            display: inline-block;
-            padding: 12px 32px;
+            padding: 8px 16px;
             border: none;
-            border-radius: 8px;
-            font-size: 15px;
-            font-weight: 500;
+            border-radius: 4px;
+            font-size: 14px;
             cursor: pointer;
-            transition: all 0.2s ease;
-            font-family: inherit;
+            transition: opacity 0.2s;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #007bff;
             color: #fff;
         }
 
         .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+            opacity: 0.8;
         }
 
         .btn-danger {
-            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            background: #dc3545;
             color: #fff;
-            padding: 8px 20px;
-            font-size: 14px;
+            padding: 4px 12px;
+            font-size: 12px;
         }
 
         .btn-danger:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
-        }
-
-        .btn-secondary {
-            background: #f1f5f9;
-            color: #475569;
-            padding: 10px 24px;
-            font-size: 14px;
-        }
-
-        .btn-secondary:hover {
-            background: #e2e8f0;
-        }
-
-        #status {
-            margin-top: 16px;
-            padding: 12px 16px;
-            border-radius: 8px;
-            font-size: 14px;
-            display: none;
-        }
-
-        #status.success {
-            display: block;
-            background: #dcfce7;
-            color: #166534;
-            border: 1px solid #bbf7d0;
-        }
-
-        #status.error {
-            display: block;
-            background: #fee2e2;
-            color: #991b1b;
-            border: 1px solid #fecaca;
-        }
-
-        .hint {
-            font-size: 12px;
-            color: #94a3b8;
-            margin-top: 8px;
-            display: block;
+            opacity: 0.8;
         }
 
         #feedbackList {
             margin-top: 16px;
         }
 
-        .feedback-item {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 16px;
-            transition: all 0.2s ease;
-        }
-
-        .feedback-item:hover {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
-
-        .feedback-header {
+        .feedback-row {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .feedback-title {
-            font-weight: 600;
-            color: #1e293b;
-            font-size: 16px;
-            flex: 1;
-        }
-
-        .feedback-body {
-            color: #475569;
-            line-height: 1.7;
-            margin-bottom: 12px;
-            white-space: pre-wrap;
+            padding: 12px 16px;
+            border-bottom: 1px solid #eee;
             font-size: 14px;
         }
 
-        .feedback-meta {
-            font-size: 12px;
-            color: #94a3b8;
-            display: flex;
-            gap: 16px;
+        .feedback-row:hover {
+            background: #f8f9fa;
         }
 
-        .loading,
-        .empty {
+        .feedback-content {
+            flex: 2;
+            color: #333;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            margin-right: 16px;
+        }
+
+        .feedback-name {
+            flex: 1;
+            color: #666;
+            text-align: center;
+            min-width: 80px;
+        }
+
+        .feedback-date {
+            flex: 1;
+            color: #999;
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .feedback-actions {
+            flex: 0 0 auto;
+            margin-left: 16px;
+        }
+
+        .loading, .empty {
             text-align: center;
             padding: 40px;
-            color: #64748b;
-            font-size: 15px;
+            color: #999;
         }
 
-        .error-message {
-            color: #dc2626;
-            text-align: center;
-            padding: 20px;
+        .status {
+            margin-top: 12px;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 14px;
         }
 
-        .stats {
-            display: flex;
-            gap: 24px;
-            margin-bottom: 20px;
+        .status.success {
+            background: #d4edda;
+            color: #155724;
         }
 
-        .stat-item {
-            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-            padding: 16px 24px;
-            border-radius: 10px;
-            text-align: center;
-            flex: 1;
-        }
-
-        .stat-number {
-            font-size: 28px;
-            font-weight: 700;
-            color: #667eea;
-        }
-
-        .stat-label {
-            font-size: 13px;
-            color: #64748b;
-            margin-top: 4px;
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🔧 反馈管理面板</h1>
-            <p>查看和管理学员提交的反馈意见</p>
+            <h1>� 反馈管理</h1>
         </div>
-
-        <div class="panel">
-            <div class="panel-title">📋 反馈列表</div>
-            <div class="stats" id="stats">
-                <div class="stat-item">
-                    <div class="stat-number" id="totalCount">-</div>
-                    <div class="stat-label">总反馈数</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number" id="openCount">-</div>
-                    <div class="stat-label">待处理</div>
-                </div>
-                <div class="stat-item">
-                    <div class="stat-number" id="closedCount">-</div>
-                    <div class="stat-label">已关闭</div>
-                </div>
-            </div>
-            <button class="btn btn-primary" id="loadBtn">加载反馈列表</button>
-            <div id="feedbackList"></div>
-        </div>
+        <button class="btn btn-primary" id="loadBtn">加载反馈列表</button>
+        <div id="status"></div>
+        <div id="feedbackList"></div>
     </div>
 
     <script>
@@ -285,128 +156,110 @@
 
         const loadBtn = document.getElementById('loadBtn');
         const feedbackList = document.getElementById('feedbackList');
-        const totalCount = document.getElementById('totalCount');
-        const openCount = document.getElementById('openCount');
-        const closedCount = document.getElementById('closedCount');
+        const statusDiv = document.getElementById('status');
 
         function showStatus(message, type) {
-            const status = document.createElement('div');
-            status.textContent = message;
-            status.style.marginTop = '16px';
-            status.style.padding = '12px 16px';
-            status.style.borderRadius = '8px';
-            status.style.fontSize = '14px';
-            status.style.display = 'block';
-            if (type === 'success') {
-                status.style.background = '#dcfce7';
-                status.style.color = '#166534';
-                status.style.border = '1px solid #bbf7d0';
-            } else {
-                status.style.background = '#fee2e2';
-                status.style.color = '#991b1b';
-                status.style.border = '1px solid #fecaca';
-            }
-            feedbackList.parentNode.insertBefore(status, feedbackList);
+            statusDiv.textContent = message;
+            statusDiv.className = 'status ' + type;
             setTimeout(() => {
-                status.remove();
+                statusDiv.className = '';
+                statusDiv.textContent = '';
             }, 3000);
         }
 
-        loadBtn.addEventListener('click', function() {
-            if (!GITHUB_CONFIG.repo || !GITHUB_CONFIG.token) {
-                showStatus('请先在代码中配置GitHub仓库和Token', 'error');
-                return;
-            }
+        function parseIssue(issue) {
+            const body = issue.body || '';
+            let name = '';
+            let content = '';
+            let date = new Date(issue.created_at).toLocaleString('zh-CN');
 
+            const nameMatch = body.match(/\*\*姓名：\*\*\s*(.+?)\n/);
+            const contentMatch = body.match(/\*\*反馈内容：\*\*\n([\s\S]*)/);
+
+            if (nameMatch) name = nameMatch[1].trim();
+            if (contentMatch) content = contentMatch[1].trim();
+
+            return { name, content, date, number: issue.number };
+        }
+
+        loadBtn.addEventListener('click', function() {
             feedbackList.innerHTML = '<div class="loading">⏳ 加载中...</div>';
 
-            Promise.all([
-                fetch(`https://api.github.com/repos/${GITHUB_CONFIG.repo}/issues?labels=feedback&state=open&per_page=100`, {
-                    headers: {
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Authorization': `token ${GITHUB_CONFIG.token}`
-                    }
-                }),
-                fetch(`https://api.github.com/repos/${GITHUB_CONFIG.repo}/issues?labels=feedback&state=closed&per_page=100`, {
-                    headers: {
-                        'Accept': 'application/vnd.github.v3+json',
-                        'Authorization': `token ${GITHUB_CONFIG.token}`
-                    }
-                })
-            ])
-            .then(([openRes, closedRes]) => {
-                if (!openRes.ok || !closedRes.ok) {
-                    throw new Error('加载失败');
+            fetch(`https://api.github.com/repos/${GITHUB_CONFIG.repo}/issues?labels=feedback&state=all&per_page=100`, {
+                headers: {
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Authorization': `token ${GITHUB_CONFIG.token}`
                 }
-                return Promise.all([openRes.json(), closedRes.json()]);
             })
-            .then(([openIssues, closedIssues]) => {
-                const allIssues = [...openIssues, ...closedIssues].sort((a, b) => 
-                    new Date(b.created_at) - new Date(a.created_at)
-                );
+            .then(response => {
+                if (!response.ok) throw new Error('加载失败');
+                return response.json();
+            })
+            .then(issues => {
+                issues.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-                totalCount.textContent = allIssues.length;
-                openCount.textContent = openIssues.length;
-                closedCount.textContent = closedIssues.length;
-
-                if (allIssues.length === 0) {
+                if (issues.length === 0) {
                     feedbackList.innerHTML = '<div class="empty">📭 暂无反馈数据</div>';
                     return;
                 }
 
                 let html = '';
-                allIssues.forEach(issue => {
-                    const isOpen = issue.state === 'open';
+                issues.forEach(issue => {
+                    const { name, content, date, number } = parseIssue(issue);
                     html += `
-                        <div class="feedback-item">
-                            <div class="feedback-header">
-                                <span class="feedback-title">${issue.title} ${isOpen ? '🟢' : '🔴'}</span>
-                                ${isOpen ? `<button class="btn btn-danger" onclick="closeIssue(${issue.number})">关闭</button>` : ''}
-                            </div>
-                            <div class="feedback-body">${issue.body}</div>
-                            <div class="feedback-meta">
-                                <span>创建于：${new Date(issue.created_at).toLocaleString('zh-CN')}</span>
-                                <span>Issue #${issue.number}</span>
-                            </div>
+                        <div class="feedback-row">
+                            <span class="feedback-content">${content}</span>
+                            <span class="feedback-name">${name}</span>
+                            <span class="feedback-date">${date}</span>
+                            <span class="feedback-actions">
+                                <button class="btn btn-danger" onclick="deleteFeedback(${number})">删除</button>
+                            </span>
                         </div>
                     `;
                 });
                 feedbackList.innerHTML = html;
             })
             .catch(error => {
-                feedbackList.innerHTML = `<div class="error-message">❌ 加载失败：${error.message}</div>`;
+                feedbackList.innerHTML = '<div class="empty">❌ 加载失败：' + error.message + '</div>';
             });
         });
 
-        window.closeIssue = function(number) {
-            if (!GITHUB_CONFIG.repo || !GITHUB_CONFIG.token) {
-                showStatus('请先在代码中配置GitHub仓库和Token', 'error');
-                return;
-            }
-
-            if (!confirm('确定要关闭这条反馈吗？')) return;
+        window.deleteFeedback = function(number) {
+            if (!confirm('确定要删除这条反馈吗？')) return;
 
             fetch(`https://api.github.com/repos/${GITHUB_CONFIG.repo}/issues/${number}`, {
-                method: 'PATCH',
+                method: 'DELETE',
                 headers: {
                     'Accept': 'application/vnd.github.v3+json',
-                    'Authorization': `token ${GITHUB_CONFIG.token}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    state: 'closed'
-                })
+                    'Authorization': `token ${GITHUB_CONFIG.token}`
+                }
             })
             .then(response => {
                 if (response.ok) {
-                    showStatus('反馈已关闭', 'success');
+                    showStatus('删除成功', 'success');
                     loadBtn.click();
                 } else {
-                    throw new Error('关闭失败');
+                    fetch(`https://api.github.com/repos/${GITHUB_CONFIG.repo}/issues/${number}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Accept': 'application/vnd.github.v3+json',
+                            'Authorization': `token ${GITHUB_CONFIG.token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ state: 'closed' })
+                    })
+                    .then(res => {
+                        if (res.ok) {
+                            showStatus('反馈已关闭（已处理）', 'success');
+                            loadBtn.click();
+                        } else {
+                            throw new Error('操作失败');
+                        }
+                    });
                 }
             })
             .catch(error => {
-                showStatus('关闭失败：' + error.message, 'error');
+                showStatus('操作失败：' + error.message, 'error');
             });
         };
     </script>
