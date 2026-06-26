@@ -311,7 +311,7 @@
             });
         }
 
-        function saveFeedbacks() {
+        async function saveFeedbacks() {
             if (allFeedbacks.length === 0) {
                 showStatus('暂无反馈数据可保存', 'error');
                 return;
@@ -319,15 +319,43 @@
 
             const content = allFeedbacks.map(f => f.content).join('\n\n');
             const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const defaultName = `反馈意见_${new Date().toLocaleDateString('zh-CN').replace(/\//g, '-')}.txt`;
+
+            if ('showSaveFilePicker' in window) {
+                try {
+                    const handle = await window.showSaveFilePicker({
+                        suggestedName: defaultName,
+                        types: [{
+                            description: '文本文件',
+                            accept: { 'text/plain': ['.txt'] }
+                        }]
+                    });
+                    const writable = await handle.createWritable();
+                    await writable.write(blob);
+                    await writable.close();
+                    showStatus('反馈意见已保存', 'success');
+                } catch (err) {
+                    if (err.name !== 'AbortError') {
+                        fallbackDownload(blob, defaultName);
+                    }
+                }
+            } else {
+                const fileName = prompt('请输入保存文件名：', defaultName);
+                if (fileName) {
+                    fallbackDownload(blob, fileName);
+                }
+            }
+        }
+
+        function fallbackDownload(blob, fileName) {
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `反馈意见_${new Date().toLocaleDateString('zh-CN').replace(/\//g, '-')}.txt`;
+            a.download = fileName;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-
             showStatus('反馈意见已保存到本地', 'success');
         }
 
