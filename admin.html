@@ -40,6 +40,26 @@
             color: #333;
         }
 
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .course-selector {
+            padding: 6px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        .course-selector:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
         .header-actions {
             display: flex;
             gap: 12px;
@@ -185,7 +205,13 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>📋 通用AI动手课的反馈</h1>
+            <div class="header-left">
+                <h1>📋 通用AI动手课的反馈</h1>
+                <select class="course-selector" id="courseSelector">
+                    <option value="4">4小时课程</option>
+                    <option value="3">3小时课程</option>
+                </select>
+            </div>
             <div class="header-actions">
                 <button class="icon-btn" id="saveBtn" title="保存反馈意见">💾</button>
                 <button class="icon-btn" id="manageBtn" title="管理模式">⚙️</button>
@@ -216,6 +242,7 @@
         const feedbackList = document.getElementById('feedbackList');
         const statusDiv = document.getElementById('status');
         const selectedCount = document.getElementById('selectedCount');
+        const courseSelector = document.getElementById('courseSelector');
 
         let isManageMode = false;
         let selectedIssues = new Set();
@@ -243,6 +270,80 @@
             if (contentMatch) content = contentMatch[1].trim();
 
             return { name, content, date, number: issue.number };
+        }
+
+        async function loadCourseConfig() {
+            try {
+                const response = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.repo}/issues?labels=course-config&state=open`, {
+                    headers: {
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Authorization': `token ${GITHUB_CONFIG.token}`
+                    }
+                });
+                
+                if (!response.ok) throw new Error('加载配置失败');
+                const issues = await response.json();
+                
+                if (issues.length > 0) {
+                    const body = issues[0].body;
+                    const match = body.match(/courseHours:\s*(\d+)/);
+                    if (match) {
+                        courseSelector.value = match[1];
+                    }
+                }
+            } catch (error) {
+                console.error('加载课程配置失败:', error);
+            }
+        }
+
+        async function saveCourseConfig() {
+            const hours = parseInt(courseSelector.value);
+            
+            try {
+                const response = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.repo}/issues?labels=course-config&state=open`, {
+                    headers: {
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Authorization': `token ${GITHUB_CONFIG.token}`
+                    }
+                });
+                
+                if (!response.ok) throw new Error('保存配置失败');
+                const issues = await response.json();
+                
+                if (issues.length > 0) {
+                    const issueNumber = issues[0].number;
+                    await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.repo}/issues/${issueNumber}`, {
+                        method: 'PATCH',
+                        headers: {
+                            'Accept': 'application/vnd.github.v3+json',
+                            'Authorization': `token ${GITHUB_CONFIG.token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            body: `courseHours: ${hours}`
+                        })
+                    });
+                } else {
+                    await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.repo}/issues`, {
+                        method: 'POST',
+                        headers: {
+                            'Accept': 'application/vnd.github.v3+json',
+                            'Authorization': `token ${GITHUB_CONFIG.token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            title: '课程配置',
+                            body: `courseHours: ${hours}`,
+                            labels: ['course-config']
+                        })
+                    });
+                }
+                
+                showStatus(`课程配置已更新为 ${hours} 小时`, 'success');
+            } catch (error) {
+                showStatus('保存课程配置失败', 'error');
+                console.error(error);
+            }
         }
 
         function toggleSelect(number) {
@@ -417,9 +518,14 @@
 
         saveBtn.addEventListener('click', saveFeedbacks);
 
+        courseSelector.addEventListener('change', saveCourseConfig);
+
         window.toggleSelect = toggleSelect;
 
-        window.addEventListener('DOMContentLoaded', loadFeedback);
+        window.addEventListener('DOMContentLoaded', function() {
+            loadFeedback();
+            loadCourseConfig();
+        });
     </script>
 </body>
 </html>
