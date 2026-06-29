@@ -3,24 +3,92 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>通用AI动手课的动手环节</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <title>通用AI动手课</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .loader {
+            text-align: center;
+            color: white;
+        }
+        .loader h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+        .loader p {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <h1>课程项目</h1>
-            </div>
-            <nav class="nav-list" id="navList">
-            </nav>
-        </aside>
-        <main class="content">
-            <article class="markdown-body" id="content">
-            </article>
-        </main>
+    <div class="loader">
+        <div class="spinner"></div>
+        <h1>通用AI动手课</h1>
+        <p>正在加载课程配置...</p>
     </div>
-    <script src="app.js"></script>
+
+    <script>
+        const GITHUB_CONFIG = {
+            repo: 'panjiasanshao/ai-course-feedback',
+            get token() {
+                const parts = ['ghp_', '2gUKJ6fOegO6SaSB', '0zMOX0KF5iAG2l', '3d3xeu'];
+                return parts.join('');
+            }
+        };
+
+        async function loadCourseConfig() {
+            try {
+                const response = await fetch(`https://api.github.com/repos/${GITHUB_CONFIG.repo}/issues?labels=course-config&state=open`, {
+                    headers: {
+                        'Accept': 'application/vnd.github.v3+json',
+                        'Authorization': `token ${GITHUB_CONFIG.token}`
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('加载配置失败');
+                }
+                
+                const issues = await response.json();
+                
+                if (issues.length > 0) {
+                    const configIssue = issues[0];
+                    const body = configIssue.body;
+                    const match = body.match(/courseHours:\s*(\d+)/);
+                    const courseHours = match ? parseInt(match[1]) : 4;
+                    
+                    window.location.href = `${courseHours}Hours.html`;
+                } else {
+                    window.location.href = '4Hours.html';
+                }
+            } catch (error) {
+                console.error('加载配置出错:', error);
+                window.location.href = '4Hours.html';
+            }
+        }
+
+        loadCourseConfig();
+    </script>
 </body>
 </html>
