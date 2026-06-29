@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skill 练习课堂</title>
+    <style>
+        /* ===== 标准重置 ===== */
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+            background: #ffffff;
+            color: #333333;
+            line-height: 1.7;
+            font-size: 15px;
+        }
+
+        /* ===== 顶部导航条 ===== */
+        .topbar {
+            background: #2c3e50;
+            color: #fff;
+            padding: 14px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+
+        .topbar h1 {
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .topbar .subtitle {
+            font-size: 13px;
+            opacity: 0.7;
+            margin-left: auto;
+        }
+
+        /* ===== 主容器 ===== */
+        .container {
+            max-width: 940px;
+            margin: 0 auto;
+            padding: 32px 24px 60px;
+        }
+
+        /* ===== Tab 导航 ===== */
+        .tab-nav {
+            display: flex;
+            gap: 0;
+            border-bottom: 2px solid #e8e8e8;
+            margin-bottom: 28px;
+        }
+
+        .tab-btn {
+            font-size: 15px;
+            font-weight: 500;
+            padding: 10px 20px;
+            border: 1px solid #e0e0e0;
+            background: #f8f8f8;
+            color: #666;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+            user-select: none;
+            margin-right: 4px;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: -2px;
+        }
+
+        .tab-btn:hover {
+            background: #edf2f7;
+            color: #2c3e50;
+            border-color: #c8d6e5;
+        }
+
+        .tab-btn.active {
+            color: #fff;
+            font-weight: 700;
+            background: #2c3e50;
+            border-color: #2c3e50;
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #2c3e50;
+        }
+
+        /* ===== 内容面板 ===== */
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* ===== 内容排版 ===== */
+        .tab-panel h1 {
+            font-size: 26px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin: 0 0 18px 0;
+            padding-bottom: 14px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .tab-panel h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin: 28px 0 12px;
+        }
+
+        .tab-panel h3 {
+            font-size: 17px;
+            font-weight: 600;
+            color: #333;
+            margin: 22px 0 10px;
+        }
+
+        .tab-panel p {
+            margin-bottom: 14px;
+        }
+
+        .tab-panel blockquote {
+            margin: 16px 0;
+            padding: 12px 18px;
+            background: #f8f9fa;
+            border-left: 4px solid #2c3e50;
+            border-radius: 0 4px 4px 0;
+            color: #555;
+        }
+
+        .tab-panel blockquote p { margin-bottom: 0; }
+
+        .tab-panel hr {
+            border: none;
+            border-top: 1px solid #eee;
+            margin: 28px 0;
+        }
+
+        /* ===== 列表 ===== */
+        .tab-panel ul, .tab-panel ol {
+            padding-left: 22px;
+            margin: 10px 0 16px;
+        }
+
+        .tab-panel li {
+            margin-bottom: 6px;
+        }
+
+        /* ===== 代码 ===== */
+        .tab-panel code {
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 13px;
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            color: #c7254e;
+        }
+
+        .tab-panel pre {
+            background: #f6f8fa;
+            border: 1px solid #e8e8e8;
+            border-radius: 6px;
+            padding: 16px 18px;
+            margin: 14px 0;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .tab-panel pre code {
+            background: none;
+            padding: 0;
+            color: #333;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        /* ===== 拷贝按钮 ===== */
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            font-size: 12px;
+            padding: 4px 10px;
+            border: 1px solid #d0d0d0;
+            border-radius: 4px;
+            background: #fff;
+            color: #666;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+            user-select: none;
+            opacity: 0.7;
+        }
+
+        .copy-btn:hover {
+            background: #f0f0f0;
+            color: #333;
+            opacity: 1;
+        }
+
+        .copy-btn.copied {
+            background: #2c3e50;
+            color: #fff;
+            border-color: #2c3e50;
+        }
+
+        /* ===== 可编辑关键词输入框 ===== */
+        .keyword-input {
+            display: inline-block;
+            border: 2px solid #e74c3c;
+            border-radius: 6px;
+            padding: 3px 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #e74c3c;
+            background: #fef5f3;
+            outline: none;
+            width: 140px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            vertical-align: middle;
+        }
+
+        .keyword-input:focus {
+            border-color: #c0392b;
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.15);
+        }
+
+        .keyword-input::placeholder {
+            color: #e0b0ab;
+            font-weight: 400;
+        }
+
+        .practice-code-block {
+            position: relative;
+            background: #f8f9fa;
+            border: 1px solid #e8e8e8;
+            border-radius: 8px;
+            padding: 14px 16px;
+            margin: 10px 0;
+            font-size: 14px;
+            line-height: 1.8;
+            color: #333;
+            word-break: break-all;
+        }
+
+        /* ===== 表格 ===== */
+        .tab-panel table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 14px 0;
+            font-size: 14px;
+        }
+
+        .tab-panel th {
+            background: #f6f8fa;
+            font-weight: 600;
+            padding: 9px 12px;
+            text-align: left;
+            border: 1px solid #e0e0e0;
+            color: #333;
+        }
+
+        .tab-panel td {
+            padding: 8px 12px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .tab-panel tr:nth-child(even) td {
+            background: #fafafa;
+        }
+
+        /* ===== 特殊标注框 ===== */
+        .tip-box {
+            background: #f0f7ff;
+            border: 1px solid #d0e4f7;
+            border-radius: 6px;
+            padding: 14px 18px;
+            margin: 16px 0;
+        }
+
+        .highlight-box {
+            background: #fff8e6;
+            border: 1px solid #f0dba8;
+            border-radius: 6px;
+            padding: 14px 18px;
+            margin: 16px 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* ===== 打印 ===== */
+        @media print {
+            .topbar { display: none; }
+            .tab-nav { display: none; }
+            .tab-panel { display: block !important; }
+            .container { padding: 20px; }
+        }
+
+        /* ===== 响应式 ===== */
+        @media (max-width: 640px) {
+            .tab-btn {
+                font-size: 14px;
+                padding: 10px 14px;
+            }
+            .tab-panel h1 { font-size: 22px; }
+            .tab-panel h2 { font-size: 18px; }
+            .container { padding: 20px 14px; }
+            .topbar .subtitle { display: none; }
+        }
+
+        /* ===== 步骤导航侧边栏 ===== */
+        .step-layout {
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+        }
+
+        .step-sidebar {
+            width: 200px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 70px;
+            background: #f8f9fa;
+            border: 1px solid #e8e8e8;
+            border-radius: 10px;
+            padding: 14px 0;
+            font-size: 13px;
+        }
+
+        .step-sidebar .step-nav-title {
+            font-weight: 700;
+            font-size: 14px;
+            color: #2c3e50;
+            padding: 8px 16px 12px;
+            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 4px;
+        }
+
+        .step-sidebar a {
+            display: block;
+            padding: 8px 16px;
+            color: #666;
+            text-decoration: none;
+            border-left: 3px solid transparent;
+            transition: all 0.15s;
+            line-height: 1.4;
+        }
+
+        .step-sidebar a:hover {
+            background: #eef2f7;
+            color: #2c3e50;
+            border-left-color: #2c3e50;
+        }
+
+        .step-sidebar a.active {
+            background: #eef2f7;
+            color: #2c3e50;
+            border-left-color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .step-sidebar a.sub-step {
+            padding-left: 28px;
+            font-size: 12px;
+            color: #999;
+        }
+
+        .step-sidebar a.sub-step:hover {
+            color: #2c3e50;
+        }
+
+        .step-main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        @media (max-width: 768px) {
+            .step-layout { flex-direction: column; }
+            .step-sidebar { width: 100%; position: static; }
+        }
+
+        /* ===== Skill 卡片（彩蛋三） ===== */
+        .skill-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 24px 28px;
+            margin: 28px 0;
+            background: #fafafa;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+            transition: box-shadow 0.2s;
+        }
+        .skill-card:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .skill-card .card-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a1a1a;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #2c3e50;
+            margin-bottom: 16px;
+        }
+        .skill-card .card-title small {
+            font-weight: 400;
+            font-size: 14px;
+            color: #888;
+            margin-left: 8px;
+        }
+        .skill-card .card-section {
+            margin: 14px 0;
+        }
+        .skill-card .card-section-label {
+            font-weight: 600;
+            font-size: 14px;
+            color: #2c3e50;
+            margin-bottom: 4px;
+        }
+        .skill-card .card-section p {
+            margin-bottom: 6px;
+        }
+        .skill-card ul {
+            padding-left: 20px;
+            margin: 4px 0 8px;
+        }
+        .skill-card ul li {
+            margin-bottom: 3px;
+            font-size: 14px;
+        }
+        .skill-card .tagline {
+            background: #eef2f7;
+            border-radius: 6px;
+            padding: 10px 14px;
+            margin: 12px 0;
+            font-size: 14px;
+            color: #333;
+        }
+        .skill-card .tagline strong {
+            color: #2c3e50;
+        }
+        .skill-card .install-box {
+            margin-top: 12px;
+        }
+        .skill-card .install-box pre {
+            margin: 4px 0 0;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 顶部导航 -->
+    <div class="topbar">
+        <h1>Skill 练习课堂</h1>
+        <span class="subtitle">前置准备 · 跟着做 · 自己做 · 分享安装 · 拓展装</span>
+    </div>
+
+    <div class="container">
+
+        <!-- Tab 导航 -->
+        <div class="tab-nav">
+            <button class="tab-btn active" data-tab="tab0">
+                练习零：配置模型
+            </button>
+            <button class="tab-btn" data-tab="tab1">
+                体验一：华为小龙虾
+            </button>
+            <button class="tab-btn" data-tab="tab2">
+                体验二：跟着做 Skill
+            </button>
+            <button class="tab-btn" data-tab="tab3">
+                体验三：自己做一个 Skill
+            </button>
+            <button class="tab-btn" data-tab="tab4">
+                体验四：分享 &amp; 安装 Skill
+            </button>
+            <button class="tab-btn" data-tab="tab5">
+                彩蛋五：推荐 Skill
+            </button>
+        </div>
+
+<!-- ===== Tab 0: 配置模型 ===== -->
+        <div class="tab-panel active" id="tab0">
+<h1>如何给员工助手配置 DeepSeek 外部模型</h1>
+<p>在开始练习之前，先配置好 DeepSeek 外部 AI 模型。以下步骤将引导你完成从注册到员工助手配置的完整流程。</p>
+
+<hr>
+
+<div class="skill-card">
+<div class="card-title">第一步：注册 DeepSeek 账号</div>
+<ol>
+<li>打开 <a href="https://www.deepseek.com" target="_blank">deepseek.com</a></li>
+<li>点击 <strong>"API开放平台"</strong></li>
+<li>使用邮箱注册账号</li>
+</ol>
+</div>
+
+<div class="skill-card">
+<div class="card-title">第二步：充值</div>
+<ol>
+<li>点击左侧 <strong>"充值"</strong></li>
+<li>选择 <strong>"在线充值"</strong>，默认充 10 块钱</li>
+<li>一般可以使用 1-2 周</li>
+</ol>
+</div>
+
+<div class="skill-card">
+<div class="card-title">第三步：创建 API Key</div>
+<ol>
+<li>充值后，点击 <strong>"API Keys"</strong> → <strong>"创建API Key"</strong></li>
+<li>名字随便起</li>
+<li><strong>重要</strong>：拷贝完 key 后一定要保存在本地，否则关掉界面就没有了，只能重新创建</li>
+</ol>
+<div class="highlight-box">
+<strong>注意</strong>：API Key 只显示一次，请务必立即保存到安全位置。
+</div>
+</div>
+
+<div class="skill-card">
+<div class="card-title">第四步：在员工助手中配置模型</div>
+<ol>
+<li>回到 <strong>员工助手</strong></li>
+<li>在<strong>执行</strong>窗口，选择添加 <strong>"模型解锁生产力"</strong></li>
+<li>点击 <strong>"增加"</strong>，选择 <strong>DeepSeek</strong></li>
+<li>把刚刚拷贝的 key 填入 <strong>API KEY</strong></li>
+<li>模型名称选择 <strong>DeepSeek V4 Flash</strong> 和 <strong>DeepSeek V4 Pro</strong></li>
+</ol>
+</div>
+
+<div class="skill-card">
+<div class="card-title">第五步：模型选择参考</div>
+<p>两个模型的区别如下，一般我们用 Flash 就足够了：</p>
+
+<table>
+<thead>
+<tr><th>模型</th><th>核心定位</th><th>关键特性</th><th>适用场景</th><th>API参考价 (每百万tokens)</th></tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>DeepSeek-V4-Pro</strong></td>
+<td><strong>高性能旗舰版</strong>，追求顶尖性能</td>
+<td>强大的推理、世界知识、Agent能力；<strong>体验优于Sonnet 4.5，接近Opus 4.6非思考模式</strong></td>
+<td><strong>复杂推理任务</strong>：数学、STEM、竞赛级代码。<br><strong>深度Agent应用</strong>：高难度自动化代码生成、复杂工具调用。</td>
+<td>输入(缓存未命中): <strong>12元</strong><br>输出: <strong>24元</strong></td>
+</tr>
+<tr>
+<td><strong>DeepSeek-V4-Flash</strong></td>
+<td><strong>高效经济版</strong>，主打性价比和速度</td>
+<td>推理能力接近Pro版；<strong>简单Agent任务与Pro相当</strong>，但世界知识和复杂任务略逊。</td>
+<td><strong>日常通用对话</strong>：即时响应的聊天、轻量文本处理。<br><strong>成本敏感场景</strong>：大规模数据处理、原型验证，对成本有较高要求的场景。</td>
+<td>输入(缓存未命中): <strong>1元</strong><br>输出: <strong>2元</strong></td>
+</tr>
+</tbody>
+</table>
+
+<div class="tagline"><strong>建议</strong>：日常练习使用 Flash 即可，性价比更高。需要处理复杂推理任务时再切换到 Pro。</div>
+</div>
+
+<div class="highlight-box" style="text-align:center;">
+如需查看完整的操作指引，请点击查看原始文档：<br>
+<a href="https://clouddocs.huawei.com/wapp/share/6bfff0b8-3e8c-4b0a-a854-392478902215" target="_blank" style="font-weight:600;">📄 配置 DeepSeek 外部模型操作指引（含截图）→</a>
+</div>
+        </div>
+
+<!-- ===== Tab 1: 体验华为小龙虾 ===== -->
+        <div class="tab-panel" id="tab1">
+<h1>体验华为小龙虾</h1>
+<p>打开员工助手，注意区分两个按钮：<strong>回答</strong> &amp; <strong>执行</strong></p>
+
+<div style="text-align:center; margin: 30px 0; padding: 30px; background: linear-gradient(135deg, #fef9e7 0%, #fdebd0 100%); border-radius: 12px; border: 2px solid #f0c23f;">
+<span style="font-size: 16px; color: #888;">"回答" = 对话机器人</span>
+&nbsp;&nbsp;&nbsp;&nbsp;
+<span style="font-size: 32px; font-weight: 900; color: #e74c3c; letter-spacing: 4px; text-shadow: 2px 2px 0 rgba(231,76,60,0.15);">"执行" = 小龙虾</span>
+<br><br>
+<span style="font-size: 14px; color: #999;">请点击 <strong style="color:#e74c3c; font-size:18px;">"执行"</strong> 按钮来调用小龙虾能力</span>
+</div>
+
+<hr>
+
+<div class="skill-card">
+<div class="card-title">练习一：查找 PPT 文件</div>
+<p>在下方输入你的关键词，点击 <strong>📋 拷贝</strong> 后粘贴到员工助手中执行：</p>
+<div class="practice-code-block" id="practice1">
+查找电脑最近用的一个和<strong><input class="keyword-input" data-target="practice1" placeholder="输入关键词" /></strong>相关的 PPT 文件
+</div>
+</div>
+
+<div class="skill-card">
+<div class="card-title">练习二：邮件和消息总结</div>
+<p>在下方输入你的关键词，点击 <strong>📋 拷贝</strong> 后粘贴到员工助手中执行：</p>
+<div class="practice-code-block" id="practice2">
+查找<strong><input class="keyword-input" data-target="practice2" placeholder="输入关键词" /></strong>最近一周和我的邮件和消息，总结哪些事情要去做，要去关注
+</div>
+</div>
+
+<div class="skill-card">
+<div class="card-title">练习三：心声舆情分析</div>
+<p>在下方输入你的关键词，点击 <strong>📋 拷贝</strong> 后粘贴到员工助手中执行：</p>
+<div class="practice-code-block" id="practice3">
+总结昨天心声上关于<strong><input class="keyword-input" data-target="practice3" placeholder="输入关键词" /></strong>的热点，做舆情分析，特别是重大负面消息，并给出建议
+</div>
+</div>
+
+<div class="tip-box">
+<strong>💡 提示</strong>：小龙虾（执行模式）可以调用工具、搜索文件、读取邮件等，比纯对话模式强大得多。试试看它能做什么！
+</div>
+        </div>
+
+<!-- ===== Tab 2: 跟着做 Skill ===== -->
+        <div class="tab-panel" id="tab2">
+<h1>跟着做一个 Skill：严苛领导审阅</h1>
+<p>通过一个真实案例，带你体验从<strong>"找 AI 润色提示词"</strong>到<strong>"在员工助手试跑"</strong>再到<strong>"变成 Skill"</strong>的完整流程。</p>
+
+<div class="step-layout">
+<div class="step-sidebar">
+<div class="step-nav-title">📋 步骤导航</div>
+<a href="#step-nav-1">第一步：找 AI 润色</a>
+<a href="#step-nav-1-1" class="sub-step">↳ 第一轮对话</a>
+<a href="#step-nav-1-2" class="sub-step">↳ 第二轮对话</a>
+<a href="#step-nav-2">第二步：试跑微调</a>
+<a href="#step-nav-3">第三步：变成 Skill</a>
+<a href="#step-nav-4">💡 核心要点</a>
+<a href="#step-nav-5">第四步：使用 Skill</a>
+</div>
+<div class="step-main">
+
+<hr>
+
+<h2 id="step-nav-1">第一步：找一个牛的 AI 润色提示词</h2>
+<p>把需求丢给 Gemini（或其他外部大模型），让它帮你把想法打磨成一个专业的 Prompt。下面是我在 Gemini 上的完整对话，你可以直接参考：</p>
+
+<div class="tip-box">
+<strong>🔗 原始对话链接</strong>（如果打不开也没关系，内容已完整展开在下方）：<br>
+<a href="https://gemini.google.com/share/1ac1c2923845" target="_blank" style="font-weight:600;">https://gemini.google.com/share/1ac1c2923845 →</a>
+</div>
+
+<hr>
+
+<h3 id="step-nav-1-1">📝 第一轮对话：明确需求与细节确认</h3>
+
+<div class="skill-card">
+<div class="card-title">我（用户）→ Gemini</div>
+<pre><code>我要写一个 skills。在写之前先问我问题。
+
+需求如下：
+
+你是一个细心、认真、谨慎、严苛、关注可行性的领导，你对决策质量负责，
+
+你会收到一份材料，请 AI 先认真通读并理解这份材料，
+
+提取下列关键信息：
+
+1. 需要决策的点或者下一步要采取的行动
+2. 材料的核心观点是什么
+3. 材料整体逻辑是什么
+4. 材料本身的质量（逻辑是否通畅，是否有 AI 味，信息是否过载，观点是否清晰等）
+5. 到公司内网寻找是否有类似的发文、知识、信息或案例，来参考和对照。
+6. 请提出尖锐的挑战点，用于评审。</code></pre>
+</div>
+
+<div class="skill-card">
+<div class="card-title">Gemini → 我（反问确认）</div>
+<p>Gemini 没有直接写，而是先问了几个关键问题，确保理解准确：</p>
+<ol>
+<li><strong>关于"公司内网"的搜索能力</strong>：需求中提到"到公司内网寻找是否有类似的发文、知识、信息或案例"。请问这个 AI Skill 是否真的具备访问你们公司内网的权限（例如通过某种 API 或集成）？
+<ul>
+<li><em>如果可以访问：</em>请说明一下大概是通过什么方式访问，或者在 Prompt 中应该如何指示 AI 去调用这个能力？</li>
+<li><em>如果不能访问（仅为模拟）：</em>那么我应该在 Prompt 中如何处理这一步？是让 AI 假设已经搜索过，还是让 AI 提示用户去内网补充这些信息？</li>
+</ul>
+</li>
+<li><strong>输入材料的类型</strong>：通常提交给这个"领导"的材料是哪种类型的？比如，是项目立项书、产品需求文档（PRD）、运营活动方案、还是战略规划报告？了解材料类型能让"尖锐的挑战点"更有针对性。</li>
+<li><strong>输出格式的要求</strong>：你希望 AI 最终输出的内容是什么样式的？比如，是分点罗列（1-6 条），还是以一段连贯的"领导批示"风格的口吻输出，或者需要以特定的 Markdown 表格呈现？</li>
+<li><strong>"AI 味"的定义</strong>：你提到的"是否有 AI 味"通常指哪些特征？是指使用了过多华丽辞藻、缺乏具体数据支撑、还是套话连篇？明确这一点有助于 AI 更准确地进行质量评估。</li>
+</ol>
+</div>
+
+<div class="skill-card">
+<div class="card-title">我 → Gemini（回答）</div>
+<pre><code>这个 AI Skill 具备访问你们公司内网的权限，相关系统提供 MCP 服务；
+材料是泛化，各种都有。
+连贯的"领导批示"风格的口吻输出；
+AI 味是指明显由 AI 生成。</code></pre>
+</div>
+
+<hr>
+
+<h3 id="step-nav-1-2">📝 第二轮对话：输出最终 Skill 设定</h3>
+
+<div class="skill-card">
+<div class="card-title">Gemini → 我（完整 Prompt）</div>
+<p>Gemini 根据我的回答，输出了完整的 Skill 设定。这个 Skill 特别强化了"领导批示"的连贯行文风格，并将调用 MCP 服务进行内网搜索作为必经的工作流。</p>
+
+<h3>角色设定</h3>
+<p>你是一位细心、认真、谨慎、严苛、极其关注可行性的公司高管/业务领导。你对最终的决策质量负绝对责任，极其厌恶浮于表面的套话、经不起推敲的逻辑以及脱离实际的方案。</p>
+
+<h3>核心任务</h3>
+<p>你的下属会向你提交各种类型的泛化材料（如汇报、方案、规划、申请等）。你需要对材料进行深度审阅，调用内网系统进行查证，并以"连贯的领导批示"风格输出你的审阅意见和尖锐挑战。</p>
+
+<h3>工作流 (Workflow)</h3>
+<p>当你收到一份材料时，必须严格按照以下步骤在后台进行思考和执行，最后统一输出批示：</p>
+<ol>
+<li><strong>深度阅读与解构</strong>：通读材料，提炼核心观点、整体逻辑主线，以及明确该材料最终需要你拍板的"决策点"或下一步的"具体行动"。</li>
+<li><strong>质量诊断</strong>：严苛评估材料质量。
+<ul>
+<li>逻辑是否闭环、通畅？</li>
+<li>是否信息过载或主次不分？</li>
+<li>观点是否清晰且有数据/事实支撑？</li>
+</ul>
+</li>
+<li><strong>反 AI 味审查</strong>：排查是否存在明显由 AI 生成的痕迹（如：空泛的正确废话、缺乏公司具体业务语境的机械结构、过度华丽但无实质信息的辞藻）。</li>
+<li><strong>内网求证 (调用 MCP)</strong>：<strong>必须调用公司的 MCP 服务（内网搜索工具）</strong>，以材料的核心关键词在内网查找是否有类似的发文、历史知识库、沉淀信息或对标案例。将搜索结果作为你评判该材料创新性、合规性或历史教训的依据。</li>
+<li><strong>生成尖锐挑战</strong>：基于以上所有分析，站在防范风险和质询可行性的角度，构思至少 3 个极其尖锐、直指要害的问题，用于接下来的评审会。</li>
+</ol>
+
+<h3>输出格式与语气要求</h3>
+<ul>
+<li><strong>绝不允许</strong>使用死板的"1. 核心观点是... 2. 逻辑是..."这种机器问答格式。</li>
+<li>你必须将上述所有关键信息融合成一段或多段连贯的、具有权威感和压迫感的"领导批示/邮件回复"。</li>
+<li><strong>语气参考</strong>：严肃、犀利、一针见血、不留情面、务实。</li>
+</ul>
+
+<div class="highlight-box">
+<strong>💡 批示内容必须自然地包含以下要素（示例框架，请根据具体材料灵活调整，保持行文连贯）：</strong>
+<ul>
+<li><strong>开篇定调</strong>：一针见血地指出材料的核心观点和整体逻辑，并给出初步定性。（例如：<em>"这份材料我看了，核心想表达的是……，整体逻辑是按照……推进的。"</em>）</li>
+<li><strong>质量与"AI 味"敲打</strong>：直接指出材料的质量缺陷。如果有 AI 味，必须严厉批评。（例如：<em>"材料信息密度太低，部分段落读起来像是 AI 生成的套话，完全没有结合我们实际的业务痛点……"</em>）</li>
+<li><strong>内网查证反馈</strong>：提及你查阅内网的结果，并以此施压。（例如：<em>"我刚在内网查了一下，去年 XX 部门发过类似的方案，你们这份材料相比之前的历史经验，没有任何实质性突破……"</em>）</li>
+<li><strong>决策点与行动要求</strong>：明确指出需要做什么。（例如：<em>"现在需要我决策的点无非是……，针对这个，下一步必须……"</em>）</li>
+<li><strong>尖锐挑战（评审预警）</strong>：列出评审会上必须回答的犀利问题。（例如：<em>"在明天的评审会上，你们团队必须给我解释清楚以下几个致命问题：第一……；第二……；第三……"</em>）</li>
+</ul>
+</div>
+
+<h3>初始行动</h3>
+<p>向用户打招呼，说明你的行事风格，并要求用户提交需要审阅的材料。</p>
+</div>
+
+<hr>
+
+<h2 id="step-nav-2">第二步：在员工助手试跑提示词，根据结果微调</h2>
+<p>点击下方代码块右上角的 <strong>📋 拷贝</strong>，把完整的 Prompt 粘贴到员工助手中，再附上你的待评审材料，实际运行看看效果：</p>
+
+<div class="skill-card">
+<div class="card-title">📋 完整 Prompt（点击拷贝 → 粘贴到员工助手）</div>
+<pre><code>角色设定
+你是一位细心、认真、谨慎、严苛、极其关注可行性的公司高管/业务领导。你对最终的决策质量负绝对责任，极其厌恶浮于表面的套话、经不起推敲的逻辑以及脱离实际的方案。
+
+核心任务
+你的下属会向你提交各种类型的泛化材料（如汇报、方案、规划、申请等）。你需要对材料进行深度审阅，调用内网系统进行查证，并以"连贯的领导批示"风格输出你的审阅意见和尖锐挑战。
+
+工作流 (Workflow)
+当你收到一份材料时，必须严格按照以下步骤在后台进行思考和执行，最后统一输出批示：
+
+1. 深度阅读与解构：通读材料，提炼核心观点、整体逻辑主线，以及明确该材料最终需要你拍板的"决策点"或下一步的"具体行动"。
+
+2. 质量诊断：严苛评估材料质量。
+- 逻辑是否闭环、通畅？
+- 是否信息过载或主次不分？
+- 观点是否清晰且有数据/事实支撑？
+
+3. 反AI味审查：排查是否存在明显由AI生成的痕迹（如：空泛的正确废话、缺乏公司具体业务语境的机械结构、过度华丽但无实质信息的辞藻）。
+
+4. 内网求证 (调用MCP)：必须调用公司的MCP服务（内网搜索工具），以材料的核心关键词在内网查找是否有类似的发文、历史知识库、沉淀信息或对标案例。将搜索结果作为你评判该材料创新性、合规性或历史教训的依据。
+
+5. 生成尖锐挑战：基于以上所有分析，站在防范风险和质询可行性的角度，构思至少3个极其尖锐、直指要害的问题，用于接下来的评审会。
+
+输出格式与语气要求
+- 绝不允许使用死板的"1. 核心观点是... 2. 逻辑是..."这种机器问答格式。
+- 你必须将上述所有关键信息融合成一段或多段连贯的、具有权威感和压迫感的"领导批示/邮件回复"。
+- 语气参考：严肃、犀利、一针见血、不留情面、务实。
+
+批示内容必须自然地包含以下要素（示例框架，请根据具体材料灵活调整，保持行文连贯）：
+- 开篇定调：一针见血地指出材料的核心观点和整体逻辑，并给出初步定性。
+- 质量与"AI味"敲打：直接指出材料的质量缺陷。如果有AI味，必须严厉批评。
+- 内网查证反馈：提及你查阅内网的结果，并以此施压。
+- 决策点与行动要求：明确指出需要做什么。
+- 尖锐挑战（评审预警）：列出评审会上必须回答的犀利问题。</code></pre>
+<p style="margin-top:10px;">粘贴后，再附上你的待评审文件内容，一起发送给员工助手。</p>
+<p>运行后，根据输出结果，你觉得哪里需要调整？可以继续跟 AI 对话微调。</p>
+</div>
+
+<hr>
+
+<h2 id="step-nav-3">第三步：变成 Skill</h2>
+<p>对员工助手说：</p>
+
+<div class="skill-card">
+<div class="card-title">让 Agent 创建 Skill</div>
+<pre><code>把刚刚的操作变成 skill，skill 的名字叫"评审材料"，英文名字你来取。</code></pre>
+<p>Agent 会自动初始化目录、编写 SKILL.md、创建资源文件。</p>
+</div>
+
+<hr>
+
+<h2 id="step-nav-4">💡 核心要点</h2>
+<div class="highlight-box">
+<strong>三步走：</strong><br>
+<strong>第一步</strong>：找外部 AI（如 Gemini）帮你把想法润色成专业的 Prompt<br>
+<strong>第二步</strong>：在员工助手中试跑，根据实际效果微调<br>
+<strong>第三步</strong>：对 Agent 说"把刚刚的操作变成 skill"，一键固化
+</div>
+
+<hr>
+
+<h2 id="step-nav-5">第四步：使用 Skill</h2>
+
+<div class="skill-card">
+<div class="card-title">① 刷新 Skill 列表</div>
+<p>点开"我的 Skill"，点击右上角的 <strong><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2" stroke-linecap="round" style="vertical-align:middle; margin-bottom:2px;"><path d="M1 12a11 11 0 0 1 18-8.5"/><path d="M23 12a11 11 0 0 1-18 8.5"/><path d="M19 1v4h-4"/><path d="M5 23v-4h4"/></svg> 刷新</strong> 按钮，刚刚创建的 Skill 就会出现在列表中。</p>
+</div>
+
+<div class="skill-card">
+<div class="card-title">② 触发 Skill（两种方式）</div>
+<p><strong>方式一：实名调用</strong></p>
+<p>在我的 Skill 列表中选中刚刚创建的 <strong>"严苛领导审阅"（或你起的英文名）</strong>，附上你的待评审文档，Agent 就会按工作流开始评审。</p>
+
+<p style="margin-top:16px;"><strong>方式二：关键词触发</strong></p>
+<p>直接在员工助手中输入以下内容（不需要先选中 Skill）：</p>
+<pre><code>请按照高管审阅工作流处理以下材料：</code></pre>
+<p>Agent 会自动匹配到名为"严苛领导审阅"的 Skill 并启动审阅流程。</p>
+</div>
+
+</div>
+</div>
+</div>
+
+        <!-- ===== Tab 3: 自己做一个 Skill ===== -->
+        <div class="tab-panel" id="tab3">
+<h1>自己做一个 Skill</h1>
+<p>以下任务 <strong>四选一</strong>，选一个你最有感觉的，自己动手创建一个 Skill。</p>
+
+<!-- 卡片 1 -->
+<div class="skill-card">
+<div class="card-title">选题一：关注自己</div>
+<p style="color:#888;font-size:14px;margin:-8px 0 12px;">每天早上发 WeLink 给我，没有内容就不发</p>
+<p>创建一个 Skill，每天早上自动收集以下信息，生成一份清晰可行动的个人简报：</p>
+<ul>
+<li>查询 W3 待办、待读邮件、待回消息（关注列表）</li>
+<li>待办流程：我申请的和需我批准的流程</li>
+<li>内网中涉及到本人的消息（任命……）</li>
+<li>内网中与我部门相关的信息</li>
+</ul>
+</div>
+
+<!-- 卡片 2 -->
+<div class="skill-card">
+<div class="card-title">选题二：关注领导</div>
+<p style="color:#888;font-size:14px;margin:-8px 0 12px;">每月月末周六定时输出</p>
+<p>创建一个 Skill，输入领导的工号，收集该员工最近一个月给你的邮件、聊天记录、WeLink 群聊天记录、内网发文、心声信息等，整理出：</p>
+<ol>
+<li>他的核心关注点</li>
+<li>重要讲话、任命</li>
+<li>与我交流的关键事项</li>
+<li>我所在部门高度相关的事情</li>
+<li>最近是否有特殊日子（生日、加入华为纪念日），提醒我关注</li>
+</ol>
+</div>
+
+<!-- 卡片 3 -->
+<div class="skill-card">
+<div class="card-title">选题三：关注华为</div>
+<p style="color:#888;font-size:14px;margin:-8px 0 12px;">舆情洞察 · 批判性视角</p>
+<ul>
+<li>华为一年舆情变化、新产品上市计划</li>
+<li>搜索社交媒体获取对华为的真实评价</li>
+<li>调研报告：关注的事项（如华为云、算力），定制几个关注点，不要新闻类，要最大热点，特别是批判性信息</li>
+<li>输出一份报告（HTML）</li>
+<li>业界包括内部对 tao 定律的反应和舆情</li>
+</ul>
+</div>
+
+<!-- 卡片 4 -->
+<div class="skill-card">
+<div class="card-title">选题四：头脑风暴</div>
+<p style="color:#888;font-size:14px;margin:-8px 0 12px;">创意激发 · 灵感助手 · 互动式共创</p>
+<p>下面的提示词来自 Gemini Gems 的 Brainstormer（灵感源泉），这是全球都可以访问的 Gemini 功能：</p>
+<pre><code>职责
+你的职责是激发我的灵感和创造力。你将帮助我集思广益，提出各种创意：礼物、派对主题、创作灵感、周末活动等等。
+
+目标
+* 你就像我的创意生成工具，能够给出与我所输入提示相关、立即可行的新颖创意。
+* 与我合作，寻求我的意见，使创意更符合我的需求和兴趣。
+
+整体方向
+* 提出问题，从我输入的内容中寻找新的灵感并不断完善创意。
+* 使用充满活力、热情的语气和易于理解的词汇。
+* 在整个对话过程中始终参考上下文，确保创意内容和回应与之前的所有对话内容相关。
+* 如果收到打招呼的内容或被询问可以做什么，请简要说明你的职责。要保持简洁、切中要点，给出一些简短的例子。
+
+分步指引
+* 理解我的要求：在提出创意之前，请先询问我一些更细节的问题，可以是有关兴趣、需求、主题、地点或任何其他可能使创意内容更有趣或更适合的细节，从而明确理解我的要求。例如，如果我输入的提示和礼物创意有关，请问我接受礼物的人有什么兴趣和需求。如果我的问题与某种活动或经验相关，则要问我预算，或可能限制相关创意实行的任何其他因素。
+* 显示选项：根据要求提供至少三个量身定制的创意，对每个创意进行编号，以便我轻松选择最喜欢的。用易于阅读的格式分享创意，在开头提供简短的介绍来鼓励我进一步探索。
+  与地点相关的创意：如果创意可能涉及特定地点，并且从之前的对话上下文无法判断具体地点，请询问我该创意是否应该发生在某个特定的地理区域，或者通过询问我相关兴趣来辨别符合要求的地理区域。
+  旅行建议：涉及交通时，在给我提供选择之前，要先问我偏好用哪种交通方式前往相关地点。如果两个地点之间的距离很远，请始终建议最快的方式。
+* 检查我是否有需要添加的内容：询问我是否需要添加任何其他细节，或者是否需要调整创意方向。要纳入对话中提及的任何新细节或更改。
+* 让我选择一个创意，然后为我提供更深入的计划：如果我选择了其中一个创意，就进一步深入探索，通过添加细节来充实主题，但要切中要点并保持回答简洁。</code></pre>
+</div>
+
+<div class="highlight-box">
+<strong>选一个你最感兴趣的，开干吧！</strong>
+</div>
+        </div>
+
+        <!-- ===== Tab 4: 分享 & 安装 Skill ===== -->
+        <div class="tab-panel" id="tab4">
+<h1>分享 &amp; 安装 Skill</h1>
+<p>做好 Skill 后，可以打包分享给同事，其他人拿到后也能一键安装使用。</p>
+
+<hr>
+
+<div class="skill-card">
+<div class="card-title">① 打包 Skill</div>
+<ol>
+<li>点击 <strong>我的 Skill</strong>，选择你要分享的 Skill</li>
+<li>对员工助手说：</li>
+</ol>
+<pre><code>请帮我打包这个skill，放到桌面</code></pre>
+<ol start="3">
+<li>桌面上会出现对应的文件夹，里面有 SKILL.md 等文件</li>
+<li>把整个文件夹压缩（zip），或者如果只有 SKILL.md 一个文件，也可以直接分享这个文件</li>
+</ol>
+</div>
+
+<div class="skill-card">
+<div class="card-title">② 安装 Skill</div>
+<p>对方拿到文件后：</p>
+<ol>
+<li>把文件放到本地任意位置</li>
+<li>对员工助手说（替换成实际路径）：</li>
+</ol>
+<pre><code>帮我安装这个skill："C:\Users\xxx\Desktop\delimma-ppt\SKILL.md"</code></pre>
+<ol start="3">
+<li>安装完毕后，进入 <strong>"我的 Skill"</strong> 中点 <strong>刷新</strong> 按钮</li>
+<li>就能看到安装好的 Skill，选中它开始使用</li>
+</ol>
+</div>
+
+<div class="skill-card">
+<div class="card-title">③ 修改 Skill</div>
+<p>如果想对 Skill 做调整，可以在当前对话继续说：</p>
+<pre><code>请帮我修改这个skill，我希望在标准里增加XXX</code></pre>
+</div>
+
+<div class="highlight-box" style="text-align:center;">
+<strong>一句话记住</strong>：<strong>"打包"</strong> 给桌面 → 压缩分享 → 对方 <strong>"安装"</strong> → 刷新即可使用。
+</div>
+
+<div class="highlight-box" style="text-align:center;">
+如需查看带截图的完整操作指引，请点击查看原始文档：<br>
+<a href="https://clouddocs.huawei.com/wapp/doc/2a4f90c0-2253-431f-8af4-ad3e016550d0" target="_blank" style="font-weight:600;">📄 分享 &amp; 安装 Skill 操作指引（含截图）→</a>
+</div>
+        </div>
+
+        <!-- ===== Tab 5: 彩蛋五：推荐 Skill ===== -->
+        <div class="tab-panel" id="tab5">
+<h1>管理者常用 AI Skill</h1>
+<p>3 个 Skill 对应管理者的日常高频场景——做判断、看会议、改表达。不是让 AI 替你负责，而是帮你更快看清问题、压缩材料、形成下一步动作。</p>
+
+<!-- ===== 卡片 1 ===== -->
+<div class="skill-card">
+<div class="card-title">1. Decision Master <small>决策高手</small></div>
+
+<div class="card-section">
+<div class="card-section-label">🎯 适合什么场景</div>
+<ul>
+<li>一个项目要不要继续投入</li>
+<li>两个方案不知道选哪个</li>
+<li>资源有限，需要做取舍</li>
+<li>要不要暂停、止损、加码或试点</li>
+<li>开会前想提前梳理决策风险</li>
+<li>想看看一年后失败可能因为什么</li>
+</ul>
+</div>
+
+<div class="card-section">
+<div class="card-section-label">📦 它能帮你得到什么</div>
+<ul>
+<li>一句话建议、关键判断依据、方案对比</li>
+<li>最大风险、关键假设、是否可以暂缓</li>
+<li>下一步最小验证动作</li>
+</ul>
+</div>
+
+<div class="card-section">
+<div class="card-section-label">💬 使用示例</div>
+<pre><code>请用 Decision Master 帮我分析这个决策。
+
+决策问题：是否继续投入 A 项目？
+背景：...
+备选方案：
+1. 继续加大投入
+2. 保持小团队观察
+3. 暂停项目
+我的约束：预算有限，团队已经很紧...
+
+请输出：
+1. 一句话建议
+2. 关键判断依据
+3. 方案对比
+4. 最大风险
+5. 下一步最小验证动作</code></pre>
+</div>
+
+<div class="tagline"><strong>一句话记住它</strong>：把模糊选择拆成清楚判断，在投入资源前先看见代价、风险和验证动作。</div>
+
+<div class="install-box">
+<div class="card-section-label">📥 安装方法</div>
+<pre><code>skillhub install 决策高手</code></pre>
+</div>
+</div>
+
+<!-- ===== 卡片 2 ===== -->
+<div class="skill-card">
+<div class="card-title">2. Meeting Diagnosis <small>会议诊断</small></div>
+
+<div class="card-section">
+<div class="card-section-label">🎯 适合什么场景</div>
+<ul>
+<li>会后复盘会议质量</li>
+<li>判断会议是否形成决策</li>
+<li>检查责任人和时间点是否清楚</li>
+<li>找出反复讨论但没有解决的问题</li>
+<li>评估项目评审会是否可以进入下一步</li>
+<li>为下一次会议准备追问清单</li>
+</ul>
+</div>
+
+<div class="card-section">
+<div class="card-section-label">📦 它能帮你得到什么</div>
+<ul>
+<li>一句话会议判断</li>
+<li>这场会真正解决了什么 / 仍然没有解决的问题</li>
+<li>决策质量检查 / 会议中的关键风险</li>
+<li>下次会前必须补齐的信息 / 建议管理动作</li>
+</ul>
+</div>
+
+<div class="card-section">
+<div class="card-section-label">💬 使用示例</div>
+<pre><code>请用 Meeting Diagnosis 分析下面的会议纪要。
+
+会议背景：...
+会议目标：...
+会议纪要：...
+
+请只分析会议质量和执行闭环，不评价具体个人。</code></pre>
+</div>
+
+<div class="tagline"><strong>一句话记住它</strong>：把会议纪要变成管理判断，快速看清决策是否成立、责任是否清楚、风险是否暴露。</div>
+
+<div class="install-box">
+<div class="card-section-label">📥 安装方法</div>
+<pre><code>skillhub install 会议诊断</code></pre>
+</div>
+</div>
+
+<!-- ===== 卡片 3 ===== -->
+<div class="skill-card">
+<div class="card-title">3. Writing Polisher <small>文笔洗练</small></div>
+
+<div class="card-section">
+<div class="card-section-label">🎯 适合什么场景</div>
+<ul>
+<li>汇报文字太长，需要压缩</li>
+<li>工作总结有套话，需要去空话</li>
+<li>会议发言需要更短、更有判断</li>
+<li>邮件或消息需要更清楚</li>
+<li>领导讲话草稿需要更稳</li>
+<li>AI 生成内容需要去 AI 味</li>
+</ul>
+</div>
+
+<div class="card-section">
+<div class="card-section-label">📦 它能帮你得到什么</div>
+<ul>
+<li>更短的表达 / 更清楚的判断 / 更少的套话</li>
+<li>更像真实管理者的语言</li>
+<li>更适合放进汇报、邮件或会议发言的版本</li>
+</ul>
+</div>
+
+<div class="card-section">
+<div class="card-section-label">💬 使用示例</div>
+<pre><code>请用 Writing Polisher 改写下面这段文字。
+
+要求：
+1. 保留原意
+2. 删除空话
+3. 更像真实管理者表达
+4. 不要增加事实
+5. 直接输出改写后的版本
+
+原文：...</code></pre>
+</div>
+
+<div class="tagline"><strong>一句话记住它</strong>：去废话、去 AI 味，把松散文字改成短、准、有判断的表达。</div>
+
+<div class="install-box">
+<div class="card-section-label">📥 安装方法</div>
+<pre><code>skillhub install 文笔洗练</code></pre>
+</div>
+</div>
+
+<h2>什么时候用哪个</h2>
+<table>
+<thead>
+<tr><th>你的问题</th><th>推荐 Skill</th></tr>
+</thead>
+<tbody>
+<tr><td>不知道项目要不要继续做</td><td>Decision Master</td></tr>
+<tr><td>不知道几个方案怎么选</td><td>Decision Master</td></tr>
+<tr><td>想提前看决策风险</td><td>Decision Master</td></tr>
+<tr><td>想判断会议有没有形成结论</td><td>Meeting Diagnosis</td></tr>
+<tr><td>想知道会后责任和下一步是否清楚</td><td>Meeting Diagnosis</td></tr>
+<tr><td>想找出下次会前必须补齐什么</td><td>Meeting Diagnosis</td></tr>
+<tr><td>想把汇报文字改短</td><td>Writing Polisher</td></tr>
+<tr><td>想去掉 AI 味和空话</td><td>Writing Polisher</td></tr>
+<tr><td>想把发言改得更稳、更有力</td><td>Writing Polisher</td></tr>
+</tbody>
+</table>
+
+<h2>给管理者的提醒</h2>
+<ol>
+<li>AI 可以帮你拆问题，但不能替你负责。</li>
+<li>给 AI 的材料越具体，输出越可靠。</li>
+<li>没有依据的判断，要让 AI 标出来。</li>
+<li>复杂问题先让 AI 给"下一步最小验证动作"，不要直接要最终答案。</li>
+</ol>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // ===== Tab 切换 =====
+            var btns = document.querySelectorAll('.tab-btn');
+            var panels = {};
+
+            document.querySelectorAll('.tab-panel').forEach(function(p) {
+                panels[p.id] = p;
+            });
+
+            btns.forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    btns.forEach(function(b) { b.classList.remove('active'); });
+                    btn.classList.add('active');
+
+                    var target = btn.getAttribute('data-tab');
+                    Object.keys(panels).forEach(function(id) {
+                        panels[id].classList.remove('active');
+                    });
+                    if (panels[target]) {
+                        panels[target].classList.add('active');
+                    }
+                });
+            });
+
+            // ===== 一键拷贝 =====
+            document.querySelectorAll('pre').forEach(function(pre) {
+                var btn = document.createElement('button');
+                btn.className = 'copy-btn';
+                btn.textContent = '📋 拷贝';
+                pre.appendChild(btn);
+
+                btn.addEventListener('click', function() {
+                    var code = pre.querySelector('code');
+                    var text = code ? code.textContent : pre.textContent;
+                    // 去掉末尾多余的空白
+                    text = text.trim();
+
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(text).then(function() {
+                            btn.textContent = '✅ 已拷贝';
+                            btn.classList.add('copied');
+                            setTimeout(function() {
+                                btn.textContent = '📋 拷贝';
+                                btn.classList.remove('copied');
+                            }, 2000);
+                        }).catch(function() {
+                            fallbackCopy(text, btn);
+                        });
+                    } else {
+                        fallbackCopy(text, btn);
+                    }
+                });
+            });
+
+            function fallbackCopy(text, btn) {
+                var ta = document.createElement('textarea');
+                ta.value = text;
+                ta.style.position = 'fixed';
+                ta.style.left = '-9999px';
+                document.body.appendChild(ta);
+                ta.select();
+                try {
+                    document.execCommand('copy');
+                    btn.textContent = '✅ 已拷贝';
+                    btn.classList.add('copied');
+                    setTimeout(function() {
+                        btn.textContent = '📋 拷贝';
+                        btn.classList.remove('copied');
+                    }, 2000);
+                } catch (e) {
+                    btn.textContent = '❌ 拷贝失败';
+                }
+                document.body.removeChild(ta);
+            }
+
+            // ===== 练习块：可编辑关键词 + 拷贝 =====
+            document.querySelectorAll('.practice-code-block').forEach(function(block) {
+                // 添加拷贝按钮
+                var btn = document.createElement('button');
+                btn.className = 'copy-btn';
+                btn.textContent = '📋 拷贝';
+                btn.style.position = 'relative';
+                btn.style.top = 'auto';
+                btn.style.right = 'auto';
+                btn.style.float = 'right';
+                btn.style.marginTop = '8px';
+                block.appendChild(btn);
+
+                btn.addEventListener('click', function() {
+                    // 获取输入框的值，替换到文本中
+                    var input = block.querySelector('.keyword-input');
+                    var keyword = input ? input.value.trim() : '';
+                    if (!keyword) {
+                        input.focus();
+                        input.style.borderColor = '#e74c3c';
+                        input.style.boxShadow = '0 0 0 4px rgba(231,76,60,0.25)';
+                        setTimeout(function() {
+                            input.style.borderColor = '';
+                            input.style.boxShadow = '';
+                        }, 1500);
+                        return;
+                    }
+
+                    // 克隆节点，用关键词替换输入框
+                    var clone = block.cloneNode(true);
+                    var cloneInput = clone.querySelector('.keyword-input');
+                    var cloneBtn = clone.querySelector('.copy-btn');
+                    if (cloneBtn) cloneBtn.remove();
+                    if (cloneInput) {
+                        var textNode = document.createTextNode(keyword);
+                        cloneInput.parentNode.replaceChild(textNode, cloneInput);
+                    }
+                    var text = clone.textContent.trim();
+
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(text).then(function() {
+                            btn.textContent = '✅ 已拷贝';
+                            btn.classList.add('copied');
+                            setTimeout(function() {
+                                btn.textContent = '📋 拷贝';
+                                btn.classList.remove('copied');
+                            }, 2000);
+                        }).catch(function() {
+                            fallbackCopy(text, btn);
+                        });
+                    } else {
+                        fallbackCopy(text, btn);
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
