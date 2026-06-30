@@ -293,11 +293,12 @@ document.addEventListener('DOMContentLoaded', function() {
     headings.forEach((heading, index) => {
         const id = 'section-' + index;
         heading.id = id;
-        heading.innerHTML = '<span style="margin-right: 8px; font-weight: bold;">' + (index + 1) + '.</span>' + heading.textContent;
+        const originalText = heading.textContent;
+        heading.innerHTML = '<span style="margin-right: 8px; font-weight: bold;">' + (index + 1) + '.</span>' + originalText;
 
         const navItem = document.createElement('a');
         navItem.className = 'nav-item';
-        navItem.textContent = (index + 1) + '. ' + heading.textContent;
+        navItem.textContent = (index + 1) + '. ' + originalText;
         navItem.dataset.target = id;
         navItem.addEventListener('click', function(e) {
             e.preventDefault();
