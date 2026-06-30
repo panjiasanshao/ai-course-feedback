@@ -293,7 +293,6 @@ document.addEventListener('DOMContentLoaded', function() {
     headings.forEach((heading, index) => {
         const id = 'section-' + index;
         heading.id = id;
-        heading.textContent = (index + 1) + '. ' + heading.textContent;
 
         const navItem = document.createElement('a');
         navItem.className = 'nav-item';
